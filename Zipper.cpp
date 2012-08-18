@@ -29,13 +29,7 @@ void DeflateStream::processAvailable(int flush)
 }
 
 Zipper::Zipper(int level)
-    : stream_(level)
-    , level_(level)
-    , stream_is_busy_(false)
-{
-}
-
-Zipper::~Zipper()
+    : BaseZipper(level)
 {
 }
 

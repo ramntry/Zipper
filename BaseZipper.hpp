@@ -2,11 +2,15 @@
 
 namespace zlib {
 
-template <typename StreamType>
+template <typename StreamType, typename T>
 class BaseZipper
 {
 public:
-    BaseZipper() : stream_is_busy_(false) {}
+    BaseZipper(T option)
+        : stream_(option)
+        , stream_is_busy_(false)
+    {
+    }
     bool isBusy() { return stream_is_busy_; }
 
 protected:
@@ -17,17 +21,17 @@ protected:
     bool stream_is_busy_;
 };
 
-template <typename StreamType>
-class BaseZipper<StreamType>::StreamMiner
+template <typename StreamType, typename T>
+class BaseZipper<StreamType, T>::StreamMiner
 {
 public:
-    StreamMiner(StreamType *candidate, int level, bool stream_is_busy)
+    StreamMiner(StreamType *candidate, T option, bool stream_is_busy)
         : mined_stream_(candidate)
         , stream_was_busy_(stream_is_busy || kThreadSafeMode)
     {
         if (stream_was_busy_)
         {
-            mined_stream_ = new DeflateStream(level);
+            mined_stream_ = new StreamType(option);
         }
     }
 
