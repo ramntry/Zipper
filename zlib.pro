@@ -16,5 +16,6 @@ HEADERS += \
     ZStream.hpp \
     Zipper.hpp \
     Unzipper.hpp \
-    BaseStream.hpp
+    BaseStream.hpp \
+    BaseZipper.hpp
 
