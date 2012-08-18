@@ -19,7 +19,7 @@ public:
     void reinitBuffer();
     std::string evacuateResult();
 
-private:
+protected:
     void increaseBuffer();
 
     static int const kInitialBufferSize = 2;

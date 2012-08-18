@@ -1,32 +1,17 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "ZStream.hpp"
+#include "BaseStream.hpp"
 
 namespace zlib {
 
-class DeflateStream
+class DeflateStream : public BaseStream
 {
 public:
     DeflateStream(int level = Z_DEFAULT_COMPRESSION);
     ~DeflateStream();
 
-    void setSource(const char *source, int size);
-    void deflateAvailable(int flush);
-
-    const char *resultData() { return &buffer_[0]; }
-    int resultSize() { return buffer_.size() - stream_.avail_out; }
-    void reinitBuffer();
-    std::string evacuateResult();
-
-private:
-    void increaseBuffer();
-
-    static int const kInitialBufferSize = 2;
-    static int const kBufferSizeMultiplier = 2;
-
-    ZStream stream_;
-    std::vector<char> buffer_;
+    void processAvailable(int flush);
 };
 
 class Zipper
@@ -78,4 +63,3 @@ private:
 };
 
 }  // zlib
-
