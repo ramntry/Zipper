@@ -5,10 +5,6 @@
 
 namespace zlib {
 
-bool const kThreadSafeMode = false;
-int const kInitialBufferSize = 2;
-int const kBufferSizeMultiplier = 2;
-
 class DeflateStream
 {
 public:
@@ -26,6 +22,9 @@ public:
 private:
     void increaseBuffer();
 
+    static int const kInitialBufferSize = 2;
+    static int const kBufferSizeMultiplier = 2;
+
     ZStream stream_;
     std::vector<char> buffer_;
 };
@@ -42,6 +41,8 @@ public:
 
 private:
     struct StreamMiner;
+
+    static bool const kThreadSafeMode = false;
 
     DeflateStream stream_;
     int level_;

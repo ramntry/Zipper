@@ -9,10 +9,12 @@ OBJECTS_DIR = build/obj
 SOURCES += main.cpp \
     ZStream.cpp \
     Zipper.cpp \
-    Unzipper.cpp
+    Unzipper.cpp \
+    BaseStream.cpp
 
 HEADERS += \
     ZStream.hpp \
     Zipper.hpp \
-    Unzipper.hpp
+    Unzipper.hpp \
+    BaseStream.hpp
 
