@@ -24,6 +24,14 @@ ZStream::ZStream()
     bzero(this, sizeof(ZStream));
 }
 
+ZStream::~ZStream()
+{
+    assert(stream_type == UndefinedStream);
+}
+
+
+#ifdef Z_DEBUG_MODE
+
 int ZStream::DeflateInit(int level, Place const &p)
 {
     assert(stream_type == UndefinedStream);
@@ -98,11 +106,6 @@ int ZStream::InflateEnd(Place const &p)
             , Z_OK);
 }
 
-ZStream::~ZStream()
-{
-    assert(stream_type == UndefinedStream);
-}
-
 int ZStream::check(int error_code, const char *where, const char *who, const char *file, int line, ...)
 {
     if (error_code == Z_OK)
@@ -127,3 +130,4 @@ int ZStream::check(int error_code, const char *where, const char *who, const cha
     return error_code;
 }
 
+#endif  // Z_DEBUG_MODE
