@@ -38,8 +38,8 @@ public:
 	int Inflate(int flush, Place const &p);
 	int InflateEnd(Place const &p);
 
-	bool availOutIsZero() { return avail_out == 0; }
 	bool availInIsZero() { return avail_in == 0; }
+	bool availOutIsZero() { return avail_out == 0; }
 
 protected:
 	int check(int error_code, const char *where, const char *who, const char *file, int line, ...);
