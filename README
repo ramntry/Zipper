@@ -1,0 +1,12 @@
+С++-обертка над zlib
+
+Версия: 0.1 beta
+Зависимости: qmake, make, g++
+Сборка:
+	cd zlib
+	./configure
+	make
+	cd ..
+	qmake
+	make
+

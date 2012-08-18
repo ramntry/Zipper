@@ -1,17 +1,32 @@
+/*
+ * File:    Unzipper.hpp
+ * Project: Zipper: C++-wrap for zlib
+ * Author:  Roman Tereshin aka ramntry (ramntry@gmail.com, https://github.com/ramntry)
+ *
+ * Created on August 18, 2012, 1:00 PM
+ */
+
 #pragma once
-#include "ZStream.hpp"
+#include "src/BaseStream.hpp"
+#include "src/BaseZipper.hpp"
 
 namespace zlib {
 
-class Unzipper
+class InflateStream : public BaseStream
 {
 public:
-	Unzipper();
-	~Unzipper();
+    InflateStream(int);
+    ~InflateStream();
 
-private:
-	ZStream stream;
+    void processAvailable(int flush);
+};
+
+class Unzipper : public BaseZipper<InflateStream, int>
+{
+public:
+    Unzipper();
+    std::string inflateAtOnce(const char *source, int size);
+    std::string inflateAtOnce(std::string const &source);
 };
 
 }  // zlib
-

@@ -1,8 +1,14 @@
+/*
+ * File:    Zipper.hpp
+ * Project: Zipper: C++-wrap for zlib
+ * Author:  Roman Tereshin aka ramntry (ramntry@gmail.com, https://github.com/ramntry)
+ *
+ * Created on August 18, 2012, 1:00 PM
+ */
+
 #pragma once
-#include <string>
-#include <vector>
-#include "BaseStream.hpp"
-#include "BaseZipper.hpp"
+#include "src/BaseStream.hpp"
+#include "src/BaseZipper.hpp"
 
 namespace zlib {
 

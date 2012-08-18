@@ -7,15 +7,15 @@ DESTDIR = build
 OBJECTS_DIR = build/obj
 
 SOURCES += main.cpp \
-    ZStream.cpp \
-    Zipper.cpp \
-    Unzipper.cpp \
-    BaseStream.cpp
+    src/ZStream.cpp \
+    src/Zipper.cpp \
+    src/Unzipper.cpp \
+    src/BaseStream.cpp
 
 HEADERS += \
-    ZStream.hpp \
     Zipper.hpp \
     Unzipper.hpp \
-    BaseStream.hpp \
-    BaseZipper.hpp
+    src/ZStream.hpp \
+    src/BaseStream.hpp \
+    src/BaseZipper.hpp
 

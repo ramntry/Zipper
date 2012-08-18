@@ -1,6 +1,12 @@
-#include <iostream>
-#include <memory>
-#include "Zipper.hpp"
+/*
+ * File:    Zipper.cpp
+ * Project: Zipper: C++-wrap for zlib
+ * Author:  Roman Tereshin aka ramntry (ramntry@gmail.com, https://github.com/ramntry)
+ *
+ * Created on August 18, 2012, 1:00 PM
+ */
+
+#include "../Zipper.hpp"
 
 using namespace zlib;
 
