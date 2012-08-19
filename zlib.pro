@@ -2,6 +2,7 @@ TARGET = Zipper
 TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
+QMAKE_CXXFLAGS += -std=c++0x
 
 LIBS += -L./zlib -lz
 DESTDIR = build
@@ -14,8 +15,8 @@ SOURCES += main.cpp \
     src/BaseStream.cpp
 
 HEADERS += \
-    Zipper.hpp \
-    Unzipper.hpp \
+    src/Zipper.hpp \
+    src/Unzipper.hpp \
     src/ZStream.hpp \
     src/BaseStream.hpp \
     src/BaseZipper.hpp

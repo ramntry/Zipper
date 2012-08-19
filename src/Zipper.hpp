@@ -25,7 +25,11 @@ class Zipper : public BaseZipper<DeflateStream, int>
 {
 public:
     Zipper(int level = Z_DEFAULT_COMPRESSION);
+
     std::string deflateAtOnce(std::string const &source);
+    Zipper &operator <<(std::string const &src);
+    void operator <<(Manipulator manip) { manip(this); }
+    void flush();
 
 private:
     int level_;

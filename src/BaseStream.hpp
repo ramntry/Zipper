@@ -30,7 +30,7 @@ public:
 protected:
     void increaseBuffer();
 
-    static int const kInitialBufferSize = 2;
+    static int const kInitialBufferSize = 32;
     static int const kBufferSizeMultiplier = 2;
 
     zlib::ZStream stream_;

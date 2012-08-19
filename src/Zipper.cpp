@@ -6,7 +6,8 @@
  * Created on August 18, 2012, 1:00 PM
  */
 
-#include "../Zipper.hpp"
+#include <cassert>
+#include "Zipper.hpp"
 
 using namespace zlib;
 
@@ -43,8 +44,20 @@ std::string Zipper::deflateAtOnce(std::string const &source)
 {
     StreamMiner miner(&stream_, level_, stream_is_busy_);
     DeflateStream *stream = miner.get();
+    assert(stream == &stream_);
 
     stream->setSource(source.c_str(), source.size());
     stream->processAvailable(Z_FULL_FLUSH);
     return stream->evacuateResult();
+}
+
+Zipper &Zipper::operator <<(std::string const &src)
+{
+    push(src);
+    return *this;
+}
+
+void Zipper::flush()
+{
+    stream_.processAvailable(Z_FULL_FLUSH);
 }

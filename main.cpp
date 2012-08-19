@@ -8,13 +8,18 @@
 
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 #include <sstream>
-#include "Zipper.hpp"
-#include "Unzipper.hpp"
+#include "src/Zipper.hpp"
+#include "src/Unzipper.hpp"
 
 typedef std::vector<std::string> StrVec;
 
-int main()
+int const repeatTimes = 5000;
+int const flushAfterTimes = 50;
+std::string::difference_type const stepSize = 997;
+
+void test1()
 {
     zlib::Zipper zipper;
     zlib::Unzipper unzipper;
@@ -32,31 +37,25 @@ int main()
     std::cout << "Native size:   " << source.size()   << "\n"
               << "Zipped size:   " << zipped.size()   << "\n"
               << "Unzipped size: " << unzipped.size() << "\n" << std::endl;
+}
+
+void test2(StrVec &src)
+{
+    zlib::Zipper zipper;
+    zlib::Unzipper unzipper;
 
     std::cout << "big test. Please, wait" << std::endl;
-    StrVec src;
-    std::ostringstream os;
-    for (int i = 0; i < 5000; ++i)
-    {
-        os << " " << i;
-        src.push_back(os.str());
-    }
-
     std::cout << "compressing..." << std::endl;
     StrVec pck;
-    for (StrVec::iterator it = src.begin(); it != src.end(); ++it)
-    {
-        pck.push_back(zipper.deflateAtOnce(*it));
-    }
-    std::reverse(pck.begin(), pck.end());
+    std::for_each(src.begin(), src.end(), [&pck, &zipper](std::string const &str)
+            { pck.push_back(zipper.deflateAtOnce(str)); });
+    std::random_shuffle(++pck.begin(), pck.end());
 
     std::cout << "decompressing..." << std::endl;
     StrVec unp;
-    for (StrVec::iterator it = pck.begin(); it != pck.end(); ++it)
-    {
-        unp.push_back(unzipper.inflateAtOnce(*it));
-    }
-    std::reverse(unp.begin(), unp.end());
+    std::for_each(pck.begin(), pck.end(), [&unp, &unzipper](std::string const &str)
+            { unp.push_back(unzipper.inflateAtOnce(str)); });
+    std::sort(unp.begin(), unp.end());
 
     std::cout << "verifying of results" << std::endl;
     bool result = true;
@@ -65,4 +64,116 @@ int main()
         result &= (src[i] == unp[i]);
     }
     std::cout << "\nAll right? " << std::boolalpha << result << "\n" << std::endl;
+}
+
+// unstable :(
+void test3(StrVec &src)
+{
+
+    zlib::Zipper zipper;
+    zlib::Unzipper unzipper;
+
+    std::cout << "\ntest 3\n" << std::endl;
+    int counter = 0;
+    std::string buf;
+    for (StrVec::iterator it = src.begin(); it != src.end(); ++it)
+    {
+        zipper << " " << *it;
+        if (++counter % flushAfterTimes == 0)
+        {
+            zipper << zlib::flush;
+            zipper >> buf;
+            unzipper << buf;
+        }
+    }
+    unzipper << zlib::flush;
+    std::string result;
+    unzipper >> result;
+
+    std::string gage;
+    gage.reserve(result.size());
+    for (StrVec::iterator it = src.begin(); it != src.end(); ++it)
+    {
+        gage.append(" " + *it);
+    }
+    std::cout << "\nAll right? " << std::boolalpha << (gage == result) << "\n" << std::endl;
+//    std::cout << result << std::endl;
+//    std::cout << gage << std::endl;
+}
+
+// stable, but with zlib warnings :(
+void test4(StrVec &src)
+{
+    std::cout << "main test #4. Please, wait" << std::endl;
+
+    zlib::Zipper zipper(Z_BEST_COMPRESSION);
+    zlib::Unzipper unzipper;
+
+    std::string native_header = "* HEADER\n";
+    std::string native_tail = "+ OK\n";
+    int native_size = native_header.size() + native_tail.size();
+
+    std::string header = zipper.deflateAtOnce(native_header);
+    std::string tail = zipper.deflateAtOnce(native_tail);
+
+    std::cout << "compressing..." << std::endl;
+    StrVec pck;
+    std::for_each(src.begin(), src.end(), [&pck, &zipper, &native_size](std::string const &str)
+    {
+        native_size += str.size();
+        pck.push_back(zipper.deflateAtOnce(str));
+    });
+    std::random_shuffle(pck.begin(), pck.end());
+
+    pck.push_back(tail);
+    std::string compressed_data = header;
+    std::for_each(pck.begin(), pck.end(), [&compressed_data](std::string &str) { compressed_data.append(str); });
+
+    std::cout << "decompressing..." << std::endl;
+    const char *buf = compressed_data.c_str();
+    const char *end = buf + compressed_data.size();
+    const char *cursorFrom = buf;
+    const char *cursorTo = cursorFrom + std::min(stepSize, end - cursorFrom);
+    std::string result;
+    for (;;)
+    {
+        unzipper.push(cursorFrom, cursorTo - cursorFrom);
+        result.append(unzipper.evacuateResult());
+
+        std::string::difference_type step = std::min(stepSize, end - cursorFrom);
+        cursorFrom += step;
+        cursorTo += step;
+
+        if (result.size() >= native_tail.size()
+                && result.substr(result.size() - native_tail.size(), native_tail.size()) == native_tail)
+        { break; }
+    }
+    //unzipper.flush();
+    //std::string result = unzipper.evacuateResult();
+
+//    std::cout << result << std::endl;
+    std::cout << "Native size:   " << native_size << "\n"
+              << "Zipped size:   " << compressed_data.size() << "\n"
+              << "Unzipped size: " << result.size() << "\n" << std::endl;
+}
+
+int main()
+{
+    StrVec src;
+    std::ostringstream os;
+    for (int i = 0; i < repeatTimes; ++i)
+    {
+        os << " " << i;
+        src.push_back(os.str() + "\n");
+    }
+
+    test1();
+    test2(src);
+
+    // stable, but with zlib warnings :(
+    test4(src);
+
+// unstable :(
+//    test3(src);
+
 }

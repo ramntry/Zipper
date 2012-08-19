@@ -27,6 +27,9 @@ public:
     Unzipper();
     std::string inflateAtOnce(const char *source, int size);
     std::string inflateAtOnce(std::string const &source);
+    void operator <<(Manipulator manip) { manip(this); }
+    Unzipper &operator <<(std::string const &src);
+    void flush();
 };
 
 }  // zlib
