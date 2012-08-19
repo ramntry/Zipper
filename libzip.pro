@@ -4,7 +4,7 @@ CONFIG += console staticlib
 CONFIG -= qt
 QMAKE_CXXFLAGS += -std=c++0x
 
-LIBS += -L./zlib -lz
+LIBS += zlib/libz.a
 DESTDIR = build
 OBJECTS_DIR = build/obj
 
@@ -22,4 +22,3 @@ HEADERS += \
     src/BaseZipper.hpp \
     Options.hpp \
     Zip.hpp
-
