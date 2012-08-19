@@ -16,7 +16,6 @@
 typedef std::vector<std::string> StrVec;
 
 int const repeatTimes = 5000;
-int const flushAfterTimes = 50;
 std::string::difference_type const stepSize = 997;
 
 void test1()
@@ -66,41 +65,6 @@ void test2(StrVec &src)
     std::cout << "\nAll right? " << std::boolalpha << result << "\n" << std::endl;
 }
 
-// unstable :(
-void test3(StrVec &src)
-{
-
-    zlib::Zipper zipper;
-    zlib::Unzipper unzipper;
-
-    std::cout << "\ntest 3\n" << std::endl;
-    int counter = 0;
-    std::string buf;
-    for (StrVec::iterator it = src.begin(); it != src.end(); ++it)
-    {
-        zipper << " " << *it;
-        if (++counter % flushAfterTimes == 0)
-        {
-            zipper << zlib::flush;
-            zipper >> buf;
-            unzipper << buf;
-        }
-    }
-    unzipper << zlib::flush;
-    std::string result;
-    unzipper >> result;
-
-    std::string gage;
-    gage.reserve(result.size());
-    for (StrVec::iterator it = src.begin(); it != src.end(); ++it)
-    {
-        gage.append(" " + *it);
-    }
-    std::cout << "\nAll right? " << std::boolalpha << (gage == result) << "\n" << std::endl;
-//    std::cout << result << std::endl;
-//    std::cout << gage << std::endl;
-}
-
 // stable, but with zlib warnings :(
 void test4(StrVec &src)
 {
@@ -137,8 +101,7 @@ void test4(StrVec &src)
     std::string result;
     for (;;)
     {
-        unzipper.push(cursorFrom, cursorTo - cursorFrom);
-        result.append(unzipper.evacuateResult());
+        result.append(unzipper.inflateAtOnce(cursorFrom, cursorTo - cursorFrom));
 
         std::string::difference_type step = std::min(stepSize, end - cursorFrom);
         cursorFrom += step;
@@ -148,10 +111,6 @@ void test4(StrVec &src)
                 && result.substr(result.size() - native_tail.size(), native_tail.size()) == native_tail)
         { break; }
     }
-    //unzipper.flush();
-    //std::string result = unzipper.evacuateResult();
-
-//    std::cout << result << std::endl;
     std::cout << "Native size:   " << native_size << "\n"
               << "Zipped size:   " << compressed_data.size() << "\n"
               << "Unzipped size: " << result.size() << "\n" << std::endl;
@@ -172,8 +131,4 @@ int main()
 
     // stable, but with zlib warnings :(
     test4(src);
-
-// unstable :(
-//    test3(src);
-
 }

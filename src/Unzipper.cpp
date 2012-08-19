@@ -42,27 +42,12 @@ Unzipper::Unzipper()
 
 std::string Unzipper::inflateAtOnce(const char *source, int size)
 {
-    StreamMiner miner(&stream_, 0, stream_is_busy_);
-    InflateStream *stream = miner.get();
-    assert(stream == &stream_);
-
-    stream->setSource(source, size);
-    stream->processAvailable(Z_FULL_FLUSH);
-    return stream->evacuateResult();
+    stream_.setSource(source, size);
+    stream_.processAvailable(Z_FULL_FLUSH);
+    return stream_.evacuateResult();
 }
 
 std::string Unzipper::inflateAtOnce(const std::string &source)
 {
     return inflateAtOnce(source.c_str(), source.size());
-}
-
-Unzipper &Unzipper::operator <<(std::string const &src)
-{
-    push(src);
-    return *this;
-}
-
-void Unzipper::flush()
-{
-    stream_.processAvailable(Z_SYNC_FLUSH);
 }
