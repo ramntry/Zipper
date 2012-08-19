@@ -8,4 +8,4 @@
 
 #pragma once
 //#define Z_DEBUG_MODE
-#define Z_STANDALONE_TEST_MODE
+//#define Z_STANDALONE_TEST_MODE

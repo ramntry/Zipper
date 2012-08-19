@@ -1,9 +1,9 @@
 /*
- * File:    Options.hpp
+ * File:    Zip.hpp
  * Project: Zipper: C++-wrap for zlib
  * Author:  Roman Tereshin aka ramntry (ramntry@gmail.com, https://github.com/ramntry)
  *
- * Created on August 19, 2012, 1:10 PM
+ * Created on August 19, 2012, 1:20 PM
  */
 
 #pragma once
