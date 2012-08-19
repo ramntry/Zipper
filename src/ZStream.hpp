@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#define Z_DEBUG_MODE
+#include "../Options.hpp"
 
 #ifndef Z_DEBUG_MODE
 #   define NDEBUG

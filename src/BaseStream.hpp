@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include "../Options.hpp"
 #include <vector>
 #include <string>
 #include "ZStream.hpp"

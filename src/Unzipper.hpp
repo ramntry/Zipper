@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include "../Options.hpp"
 #include "src/BaseStream.hpp"
 #include "src/BaseZipper.hpp"
 
@@ -15,16 +16,18 @@ namespace zlib {
 class InflateStream : public BaseStream
 {
 public:
-    InflateStream(int);
+    InflateStream();
     ~InflateStream();
 
     void processAvailable(int flush);
 };
 
-class Unzipper : public BaseZipper<InflateStream, int>
+class Unzipper : public BaseZipper
 {
 public:
     Unzipper();
+    ~Unzipper();
+
     std::string inflateAtOnce(const char *source, int size);
     std::string inflateAtOnce(std::string const &source);
 };

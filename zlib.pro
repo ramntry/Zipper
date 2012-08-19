@@ -19,5 +19,7 @@ HEADERS += \
     src/Unzipper.hpp \
     src/ZStream.hpp \
     src/BaseStream.hpp \
-    src/BaseZipper.hpp
+    src/BaseZipper.hpp \
+    Options.hpp \
+    Zip.hpp
 

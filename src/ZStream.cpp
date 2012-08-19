@@ -6,6 +6,7 @@
  * Created on August 18, 2012, 1:00 PM
  */
 
+#include "../Options.hpp"
 #include <cassert>
 #include <cstring>
 #include <cstdarg>

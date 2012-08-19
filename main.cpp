@@ -6,12 +6,16 @@
  * Created on August 18, 2012, 1:00 PM
  */
 
+#include "Options.hpp"
 #include <iostream>
 #include <algorithm>
 #include <iterator>
 #include <sstream>
 #include "src/Zipper.hpp"
 #include "src/Unzipper.hpp"
+
+namespace zlib {
+namespace tests {
 
 typedef std::vector<std::string> StrVec;
 
@@ -116,7 +120,7 @@ void test4(StrVec &src)
               << "Unzipped size: " << result.size() << "\n" << std::endl;
 }
 
-int main()
+void runTests()
 {
     StrVec src;
     std::ostringstream os;
@@ -132,3 +136,13 @@ int main()
     // stable, but with zlib warnings :(
     test4(src);
 }
+
+}  // tests
+}  // zlib
+
+#ifdef Z_STANDALONE_TEST_MODE
+int main()
+{
+    zlib::tests::runTests();
+}
+#endif

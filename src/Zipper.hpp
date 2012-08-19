@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include "../Options.hpp"
 #include "src/BaseStream.hpp"
 #include "src/BaseZipper.hpp"
 
@@ -21,14 +22,13 @@ public:
     void processAvailable(int flush);
 };
 
-class Zipper : public BaseZipper<DeflateStream, int>
+class Zipper : public BaseZipper
 {
 public:
     Zipper(int level = Z_DEFAULT_COMPRESSION);
-    std::string deflateAtOnce(std::string const &source);
+    ~Zipper();
 
-private:
-    int level_;
+    std::string deflateAtOnce(std::string const &source);
 };
 
 }  // zlib

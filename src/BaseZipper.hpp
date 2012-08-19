@@ -7,28 +7,23 @@
  */
 
 #pragma once
+#include "../Options.hpp"
 #include <string>
 #include "BaseStream.hpp"
 
 namespace zlib {
 
-template <typename StreamType, typename T>
 class BaseZipper
 {
 public:
-    BaseZipper(T option)
-        : stream_(option)
+    BaseZipper(BaseStream *stream)
+        : stream_(stream)
     {
     }
     virtual ~BaseZipper() {}
 
-    std::string evacuateResult()
-    {
-        return stream_.evacuateResult();
-    }
-
 protected:
-    StreamType stream_;
+    BaseStream *stream_;
 };
 
 }  // zlib

@@ -6,7 +6,7 @@
  * Created on August 18, 2012, 1:00 PM
  */
 
-#include <cassert>
+#include "../Options.hpp"
 #include "Zipper.hpp"
 
 using namespace zlib;
@@ -36,13 +36,18 @@ void DeflateStream::processAvailable(int flush)
 }
 
 Zipper::Zipper(int level)
-    : BaseZipper(level)
+    : BaseZipper(new DeflateStream(level))
 {
+}
+
+Zipper::~Zipper()
+{
+    delete stream_;
 }
 
 std::string Zipper::deflateAtOnce(std::string const &source)
 {
-    stream_.setSource(source.c_str(), source.size());
-    stream_.processAvailable(Z_FULL_FLUSH);
-    return stream_.evacuateResult();
+    stream_->setSource(source.c_str(), source.size());
+    stream_->processAvailable(Z_FULL_FLUSH);
+    return stream_->evacuateResult();
 }

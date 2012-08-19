@@ -6,12 +6,12 @@
  * Created on August 18, 2012, 1:00 PM
  */
 
-#include <cassert>
+#include "../Options.hpp"
 #include "Unzipper.hpp"
 
 using namespace zlib;
 
-InflateStream::InflateStream(int)
+InflateStream::InflateStream()
 {
     stream_.InflateInit(Z_P(InflateStream::InflateStream(int)));
 }
@@ -36,15 +36,20 @@ void InflateStream::processAvailable(int flush)
 }
 
 Unzipper::Unzipper()
-    : BaseZipper(0)
+    : BaseZipper(new InflateStream)
 {
+}
+
+Unzipper::~Unzipper()
+{
+    delete stream_;
 }
 
 std::string Unzipper::inflateAtOnce(const char *source, int size)
 {
-    stream_.setSource(source, size);
-    stream_.processAvailable(Z_FULL_FLUSH);
-    return stream_.evacuateResult();
+    stream_->setSource(source, size);
+    stream_->processAvailable(Z_SYNC_FLUSH);
+    return stream_->evacuateResult();
 }
 
 std::string Unzipper::inflateAtOnce(const std::string &source)
